@@ -1,15 +1,16 @@
-"""Faiss index class for creating/loading and using the database"""
+"""Faiss index class for creating/loading and using the faiss id map database"""
 __author__ = "Vitali Muladze"
 
 import os
-from typing import (Union, Tuple, List)
 from pathlib import Path
+from typing import (Union, Tuple, List)
+
 import faiss
 import numpy
 from faiss import IDSelectorBatch
 
 
-class FaissIndex:
+class FaissIDMapIndex:
     def __init__(self, index_path: Union[str, Path] = None, dimension: int = 2048) -> None:
         """
         Initialize the the faiss database
