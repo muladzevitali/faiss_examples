@@ -71,8 +71,9 @@ class FaissIDMapIndex:
         :param index: index to change value on
         :return: index of the new vector
         """
-        index = numpy.array([index])
-        new_vector = new_vector.astype('float32')
+        index = numpy.array([index]).astype(numpy.int64)
+        new_vector = new_vector.reshape(1, -1).astype('float32')
+
         index_selector = IDSelectorBatch(index.shape[0], faiss.swig_ptr(index))
 
         self.index.remove_ids(index_selector)
@@ -92,7 +93,7 @@ class FaissIDMapIndex:
         # Search for similarities
         distances, result_indices = self.index.search(vector, n_results)
 
-        return result_indices.tolist(0)[0], distances.tolist()[0]
+        return result_indices.tolist()[0], distances.tolist()[0]
 
     def find_many(self, vectors: numpy.array, n_results: int = 10) -> Tuple[List[List[int]], List[List[int]]]:
         """
