@@ -8,13 +8,15 @@ from typing import (Union, Tuple, List)
 import faiss
 import numpy
 from faiss import IDSelectorBatch
+from .base_index import FaissBaseClass
 
 
-class FaissIDMapIndex:
+class FaissIDMapIndex(FaissBaseClass):
     def __init__(self, index_path: Union[str, Path] = None, dimension: int = 2048) -> None:
         """
         Initialize the the faiss database
         """
+        super().__init__()
         self.dimension = dimension
         # Check if the file is faiss index
         if os.path.isfile(index_path):
@@ -102,7 +104,6 @@ class FaissIDMapIndex:
         :param n_results: number of results
         :return: indices of the results and distances sorted increasingly for each vector
         """
-
         vectors = vectors.astype('float32')
         distances, result_indices = self.index.search(vectors, n_results)
 
