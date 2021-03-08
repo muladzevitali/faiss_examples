@@ -1,7 +1,9 @@
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
 import numpy
+
 from src.indices.id_map import FaissIDMapIndex
 
 
@@ -27,6 +29,16 @@ class TestFaissIDMapDatabaseInsert(unittest.TestCase):
 
         self.index.insert_many(test_vectors)
         self.assertIs(len(self.index), 6)
+
+    def test_index_save_method(self):
+        test_vectors = numpy.random.random((6, self.dimension))
+
+        self.index.insert_many(test_vectors)
+        self.index.save()
+
+        assert self.index_path.is_file()
+
+
 
 
 class TestFaissIDMapDatabaseFindAndUpdate(unittest.TestCase):

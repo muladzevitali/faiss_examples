@@ -8,6 +8,7 @@ from typing import (Union, Tuple, List)
 import faiss
 import numpy
 from faiss import IDSelectorBatch
+
 from .base_index import FaissBaseClass
 
 
@@ -17,7 +18,9 @@ class FaissIDMapIndex(FaissBaseClass):
         Initialize the the faiss database
         """
         super().__init__()
-        self.dimension = dimension
+        self.dimension: int = dimension
+        self.index_path: Path = Path(index_path)
+
         # Check if the file is faiss index
         if os.path.isfile(index_path):
             self.index = faiss.read_index(index_path)
@@ -109,17 +112,15 @@ class FaissIDMapIndex(FaissBaseClass):
 
         return result_indices.tolist(), distances.tolist()
 
-    def to_disk(self, index_path: Union[str, Path]) -> str:
+    def save(self) -> bool:
         """
         Write the index to disk
-        :param index_path: Path to the index folder
         :return: status if writing
         """
         # Create path to the index if not exists
-        if not os.path.isdir(os.path.dirname(index_path)):
-            os.makedirs(os.path.dirname(index_path), exist_ok=True)
+        self.index_path.parent.mkdir(exist_ok=True, parents=True)
         # Write the index to disk
-        faiss.write_index(self.index, index_path)
+        faiss.write_index(self.index, str(self.index_path))
 
         return True
 
